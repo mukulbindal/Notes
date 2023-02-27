@@ -183,6 +183,43 @@ errors instead of silently failing in production.
 It will show us errors for many things that may work but are not allowed 
 as part of coding practice.
 
+############
+Functions 
+
+#Declaration:
+function fnName(...args) {
+
+}
+
+OR 
+
+const fnName = function (...args) {
+
+}
+
+OR 
+// the newer way
+const fnName = () => expression
+
+const fnName = args => expression 
+
+const fnName = (arg1, arg2, ...) => {
+    // statements 
+    return result;
+}
+
+# Thumb rule is 
+# 0 args = () , 1 arg = argName, more args = (arg1, arg2..)
+# single line => skip return and {}
+# multi-line => include return and {}
+
+## We can not use 'this' keyword in Arrow functions 
+
+
+
+
+
+
 
 
 
