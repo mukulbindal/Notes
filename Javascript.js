@@ -215,6 +215,22 @@ const fnName = (arg1, arg2, ...) => {
 
 ## We can not use 'this' keyword in Arrow functions 
 
+##############Arrays####################
+
+const arr = ['1', 'mukul', 4, 5, 'local'];
+const arr_1 = new Array(1,2,3,4);
+
+arr.length    // 5    the number of elements in array
+
+### Array Methods #####
+const len = arr.push(123); // will add at the end and return the new length
+arr.unshift('john')  // adds at the start and returns the length
+arr.pop()  // removes and returns the last element
+arr.shift() // removes first element and returns it.
+arr.indexOf(123) // index of first occurence OR -1
+arr.includes(123) // true or false
+arr.splice()
+
 
 
 
