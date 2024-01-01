@@ -1,27 +1,59 @@
-def robot_collisions(N, A):
-    # Create a list of robots with their health and direction
-    robots = [(health, direction) for health, direction in A]
+import requests
+import urllib3
+from bs4 import BeautifulSoup
+from collections import defaultdict
+import threading
+import time
 
-    while True:
-        collisions = []
-        for i in range(N - 1):
-            if robots[i][1] == 1 and robots[i + 1][1] == 0:
-                # Robots facing right collide with robots facing left
-                if robots[i][0] > robots[i + 1][0]:
-                    collisions.append(i + 1)
-                elif robots[i][0] < robots[i + 1][0]:
-                    collisions.append(i)
-                else:
-                    collisions.extend([i, i + 1])
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+base_url = 'https://www.fishbowlapp.com/bowl/'
+result = defaultdict(set)
+old_result = defaultdict(set)
 
-        if not collisions:
-            break   # No more collisions
+def print_relavant_posts(bowl):
+    response = requests.get(base_url + bowls[0], headers={'User-Agent': 'PostmanRuntime/7.26.10'}, verify=False)
+    print(response)
+    soup = BeautifulSoup(response.content, 'html.parser')
 
-        # Remove robots involved in collisions
-        robots = [robot for index, robot in enumerate(
-            robots) if index not in collisions]
-        N = len(robots)  # Update the number of robots
+    posts_divs = soup.find_all(class_='post-text')
 
-    return robots
+    if posts_divs:
+        for posts in posts_divs:
+            post = posts.text 
+            
+            result[bowl].add(post)
 
-print(robot_collisions(4, [(39,1),(20, 0), (21,0), (12,0)]))
+bowls = ['tech-india', 'job-referrals-and-openings', 'job-referrals', 'interview-experience']
+def compare(a: dict, b: dict):
+    for key in a.keys():
+        l1 = a[key]
+        l2 = b[key]
+        if len(l1) != len(l2):
+            return False
+        for x, y in zip(l1, l2):
+            if x != y:
+                return False
+    return True 
+
+def start_threads():
+    threads = []
+    for bowl in bowls:
+        thread = threading.Thread(target=print_relavant_posts, args=(bowl,))
+        threads.append(thread)
+
+    for thread in threads:
+        thread.start()
+
+    for thread in threads:
+        thread.join()
+    if compare(result, old_result) == False:
+        print(result)
+
+while True:
+    start_threads()
+    print('sleeping for 300 seconds...')
+    time.sleep(300)
+    print('woke up..')
+    old_result = result
+    
+
